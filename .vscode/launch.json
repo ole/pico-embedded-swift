@@ -1,0 +1,28 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // Docs: https://code.visualstudio.com/docs/editor/debugging#_launch-configurations
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "preLaunchTask": "CMake: build",
+      // probe-rs docs for VSCode integration: https://probe.rs/docs/tools/debugger/
+      "type": "probe-rs-debug",
+      "request": "launch",
+      "name": "Flash & run (debug)",
+      "cwd": "${workspaceFolder}",
+      "chip": "RP2040",
+      "connectUnderReset": false,
+      "flashingConfig": {
+        "flashingEnabled": true,
+        "haltAfterReset": false
+      },
+      "coreConfigs": [
+        {
+          "coreIndex": 0,
+          "programBinary": "./build/PicoLinksSwift.elf"
+        }
+      ]
+    },
+  ]
+}
