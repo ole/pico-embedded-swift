@@ -13,11 +13,12 @@ int main()
     const uint LED_PIN = PICO_DEFAULT_LED_PIN;
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
-    int32_t a = 200;
-    int32_t delay = myswiftlib_add(a, a);
+    // int32_t delay = 500;
+    int32_t delay = myswiftlib_add(200, 300);
     printf("main loop start\n");
     while (true)
     {
+        printf("loop tick\n");
         gpio_put(LED_PIN, 1);
         sleep_ms(delay);
         gpio_put(LED_PIN, 0);
