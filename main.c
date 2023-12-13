@@ -14,7 +14,7 @@ int main()
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
     // Call into Swift for calculation
-    int32_t delay = myswiftlib_add(200, 300);
+    int32_t delay = myswiftlib_add(100, 100);
     printf("main loop start\n");
     while (true)
     {
