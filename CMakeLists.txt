@@ -48,7 +48,7 @@ set(CMAKE_Swift_FLAGS
     # - WMO is always required for Embedded Swift.
     # - The define `-D…` isn't necessary. It's just a convenient marker for
     #   searching the build log for Swift commands.
-    "-enable-experimental-feature Embedded -wmo -target armv6-none-none-eabi -Dmyswiftlib_arg"
+    "-enable-experimental-feature Embedded -wmo -target armv6m-none-none-eabi -Dmyswiftlib_arg"
 )
 # Disable CMAKE Swift compiler check. The compiler check always fails for
 # Embedded Swift because it tries to compile a Swift program that includes
