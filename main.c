@@ -1,5 +1,5 @@
 #include "pico/stdlib.h"
-#include "swiftlib/swiftlib.h"
+#include "my-swift-lib/my-swift-lib.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -14,7 +14,7 @@ int main()
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
     int32_t a = 200;
-    int32_t delay = add(a, a);
+    int32_t delay = myswiftlib_add(a, a);
     printf("main loop start\n");
     while (true)
     {
