@@ -13,7 +13,7 @@ int main()
     const uint LED_PIN = PICO_DEFAULT_LED_PIN;
     gpio_init(LED_PIN);
     gpio_set_dir(LED_PIN, GPIO_OUT);
-    // int32_t delay = 500;
+    // Call into Swift for calculation
     int32_t delay = myswiftlib_add(200, 300);
     printf("main loop start\n");
     while (true)
@@ -27,11 +27,10 @@ int main()
 #endif
 }
 
-// Dummy implementation to silence the linker.
+// === Symbols required by Swift. Dummy implementations to silence the linker.
+
 int posix_memalign(void **memptr, size_t alignment, size_t size)
 {
     printf("posix_memalign called\n");
     return -1;
-    // *memptr = malloc(size);
-    // return 0;
 }
