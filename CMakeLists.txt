@@ -35,23 +35,26 @@ endif ()
 include(pico_sdk_import.cmake)
 
 # Configure Swift. This must happen before `project()`. I don't know why.
+# Use nightly Swift compiler, configured for Embedded Swift.
+# Find path to swiftc and store it in swiftc_Path
 execute_process(
     COMMAND xcrun --toolchain "${Swift_Toolchain}" --find swiftc
     OUTPUT_VARIABLE swiftc_Path
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-# Use nightly Swift compiler, configured for Embedded Swift.
 set(CMAKE_Swift_COMPILER
     "${swiftc_Path}"
 )
 set(CMAKE_Swift_FLAGS
-    # - WMO is always required for Embedded Swift.
+    # Whole-module optimization is always required for Embedded Swift.
     "-enable-experimental-feature Embedded -wmo -target armv6m-none-none-eabi"
 )
-# Disable CMAKE Swift compiler check. The compiler check always fails for
-# Embedded Swift because it tries to compile a Swift program that includes
-# `print()`, which isn't available in Embedded Swift.
+# Disable CMake’s automatic Swift compiler check. The compiler check always 
+# fails for Embedded Swift because it tries to compile a Swift program that 
+# includes `print()`, which isn't available in Embedded Swift.
 set(CMAKE_Swift_COMPILER_FORCED TRUE)
+
+# === Begin project configuration
 
 project(PicoLinksSwift LANGUAGES C CXX Swift)
 
