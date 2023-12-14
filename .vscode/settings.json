@@ -1,0 +1,4 @@
+{
+  // Building Swift with CMake requires Ninja
+  "cmake.generator": "Ninja",
+}
