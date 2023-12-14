@@ -68,11 +68,12 @@ if (PICO_SDK_VERSION_STRING VERSION_LESS "1.3.0")
     message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.3.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
 endif()
 
-add_subdirectory(my-swift-lib)
-
 add_executable(PicoLinksSwift
     main.c
+    swift-shims.c
 )
+
+add_subdirectory(my-swift-lib)
 
 target_link_libraries(PicoLinksSwift
     $<TARGET_OBJECTS:myswiftlib>
