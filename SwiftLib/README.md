@@ -1,0 +1,1 @@
+Static Swift library that gets linked into the main C program. Built with CMake, so we can’t easily use a SwiftPM package here.

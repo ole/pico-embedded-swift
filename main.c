@@ -1,5 +1,5 @@
 #include "pico/stdlib.h"
-#include "my-swift-lib/my-swift-lib.h"
+#include "SwiftLib/SwiftLib.h"
 #include <stdlib.h>
 #include <stdio.h>
 

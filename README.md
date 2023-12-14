@@ -61,7 +61,7 @@ cmake -G Ninja ..
 ninja
 ```
 
-This produces the executable `PicoLinksSwift.elf` in the `build` directory.
+This produces the executable `SwiftPico.elf` in the `build` directory.
 
 ## Running on the Pico
 
@@ -71,5 +71,5 @@ You have two options to copy the executable to the Pico:
 2. Via the debug probe. I use [probe.rs](https://probe.rs/) for this, which is a tool from the Rust community, but it works in this context too:
 
     ```sh
-    probe-rs run --chip RP2040 PicoLinksSwift.elf
+    probe-rs run --chip RP2040 SwiftPico.elf
     ```

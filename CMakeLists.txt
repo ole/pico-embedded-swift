@@ -1,11 +1,3 @@
-# Build, flash, and run:
-#
-# mkdir build
-# cd build
-# cmake -G Ninja ..
-# ninja
-# probe-rs run --chip RP2040 PicoLinksSwift.elf
-
 cmake_minimum_required(VERSION 3.28)
 
 # User configuration
@@ -56,7 +48,7 @@ set(CMAKE_Swift_COMPILER_FORCED TRUE)
 
 # === Begin project configuration
 
-project(PicoLinksSwift LANGUAGES C CXX Swift)
+project(SwiftPico LANGUAGES C CXX Swift)
 
 # Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
@@ -68,17 +60,17 @@ if (PICO_SDK_VERSION_STRING VERSION_LESS "1.3.0")
     message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.3.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
 endif()
 
-add_executable(PicoLinksSwift
+add_executable(SwiftPico
     main.c
     swift-shims.c
 )
 
-add_subdirectory(my-swift-lib)
+add_subdirectory(SwiftLib)
 
-target_link_libraries(PicoLinksSwift
-    $<TARGET_OBJECTS:myswiftlib>
+target_link_libraries(SwiftPico
+    $<TARGET_OBJECTS:SwiftLib>
     pico_stdlib
 )
 
 # create map/bin/hex file etc.
-pico_add_extra_outputs(PicoLinksSwift)
+pico_add_extra_outputs(SwiftPico)
