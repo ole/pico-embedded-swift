@@ -65,23 +65,13 @@ cmake -G Ninja ..
 ninja
 ```
 
-This produces the executable `SwiftPico.elf` in the `build` directory.
+This produces the executable in the `build` directory in several formats, e.g. `SwiftPico.elf`, ``SwiftPico.uf2`, `SwiftPico.bin`.
 
 ## Running on the Pico
 
 You have two options to copy the executable to the Pico:
 
-1. Via the USB Mass Storage interface:
-
-    - Connect the Pico to your computer while holding down the BOOTSEL button. When you release the button, the Pico will appear as a removable drive.
- 
-    - Use the `elf2uf2` tool (conveniently included in the build directory) to convert the ELF file to the required UF2 format and copy it to the Pico:
-
-      ```sh
-      ./elf2uf2/elf2uf2 SwiftPico.elf /Volumes/RPI-RP2/SwiftPico.uf2
-      ```
-    
-    - The Pico will automatically reboot and run the program (you can ignore macOS’s “disk not ejected properly” message).
+1. Via the USB Mass Storage interface: Connect the Pico to your computer while holding down the BOOTSEL button. When you release the button, the Pico will appear as a removable drive. Now copy `SwiftPico.uf2` to the Pico “drive”. The Pico will automatically reboot and run the program (you can ignore macOS’s “disk not ejected properly” message).
 
 2. Via the debug probe. The debug probe is connected to your PC and talks to the Pico via its debug port. This allows you to reflash the Pico without having to disconnect it.
 
