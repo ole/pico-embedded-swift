@@ -38,8 +38,12 @@ set(CMAKE_Swift_COMPILER
     "${swiftc_Path}"
 )
 set(CMAKE_Swift_FLAGS
-    # Whole-module optimization is always required for Embedded Swift.
-    "-enable-experimental-feature Embedded -wmo -target armv6m-none-none-eabi"
+    # -wmo: Whole-module optimization is always required for Embedded Swift.
+    # -Xfrontend -function-sections: enables dead stripping of unused runtime functions.
+    "-target armv6m-none-none-eabi \
+    -enable-experimental-feature Embedded \
+    -wmo \
+    -Xfrontend -function-sections"
 )
 # Disable CMake’s automatic Swift compiler check. The compiler check always 
 # fails for Embedded Swift because it tries to compile a Swift program that 
@@ -62,7 +66,6 @@ endif()
 
 add_executable(SwiftPico
     main.c
-    swift-shims.c
 )
 
 add_subdirectory(SwiftLib)
