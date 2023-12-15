@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.28)
 # Change these values to match your config.
 # 
 # 1) Path to Raspberry Pi Pico C/C++ SDK
-#    This assumes SDK is cloned to a sibling directory of this project.
+#    This assumes the SDK is cloned to a sibling directory of this project.
 #    Alternatively, you can set PICO_SDK_PATH as an environment variable in your shell.
 if (NOT (DEFINED ENV{PICO_SDK_PATH}) AND (NOT PICO_SDK_PATH))
     set(PICO_SDK_PATH "${CMAKE_CURRENT_LIST_DIR}/../pico-sdk")
