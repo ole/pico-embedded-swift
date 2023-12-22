@@ -10,10 +10,13 @@ cmake_minimum_required(VERSION 3.28)
 if (NOT (DEFINED ENV{PICO_SDK_PATH}) AND (NOT PICO_SDK_PATH))
     set(PICO_SDK_PATH "${CMAKE_CURRENT_LIST_DIR}/../pico-sdk")
     message("PICO_SDK_PATH is not set, using value from CMakeLists.txt ('${PICO_SDK_PATH}')")
-endif ()
+endif()
 
 # Initialize the SDK based on PICO_SDK_PATH
 # Note: this must happen before `project()`.
+#
+# This include sets PICO_SDK_PATH and then includes 
+# PICO_SDK_PATH/pico_sdk_init.cmake (Pico SDK pre-init).
 include(pico_sdk_import.cmake)
 
 # Configure Swift
@@ -31,7 +34,7 @@ include(pico_sdk_import.cmake)
 if ((DEFINED ENV{CMAKE_Swift_COMPILER}) AND (NOT CMAKE_Swift_COMPILER))
     set(CMAKE_Swift_COMPILER "$ENV{CMAKE_Swift_COMPILER}")
     message("CMAKE_Swift_COMPILER: ${CMAKE_Swift_COMPILER} (using value set in environment)")
-endif ()
+endif()
 set(targetTripleLLVM "armv6m-none-none-eabi")
 set(CMAKE_Swift_FLAGS
     # -wmo: Whole-module optimization is always required for Embedded Swift.
@@ -43,7 +46,10 @@ set(CMAKE_Swift_FLAGS
     -Xfrontend -function-sections"
 )
 # Skip CMake’s automatic Swift compiler check
-message("Skipping CMake's check for working Swift compiler. The check would always fail for Embedded Swift because it tries to compile a Swift program containing `print()`, which isn't available (yet) in Embedded Swift")
+# The check would always fail for Embedded Swift because it tries to compile
+# a Swift program containing `print()`, which isn't available (yet) in
+# Embedded Swift.
+message(STATUS "Skipping CMake's check for working Swift compiler.")
 set(CMAKE_Swift_COMPILER_FORCED TRUE)
 
 # === Begin project configuration
@@ -67,7 +73,7 @@ execute_process(
 )
 if (NOT(swiftcSupportsTarget EQUAL "0"))
     message(FATAL_ERROR "Swift compiler '${CMAKE_Swift_COMPILER}' doesn't support target '${targetTripleLLVM}'. Are you using an up-to-date nightly Swift toolchain that supports Embedded Swift?\nPass the path to swiftc to CMake via `cmake -DCMAKE_Swift_COMPILER=/path/to/swiftc` or by setting CMAKE_Swift_COMPILER=/path/to/swiftc in the environment.\nExample for macOS: `cmake -DCMAKE_Swift_COMPILER=\"/Library/Developer/Toolchains/swift-DEVELOPMENT-SNAPSHOT-2023-12-07-a.xctoolchain/usr/bin/swiftc\"`")
-endif ()
+endif()
 
 # Initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
@@ -79,15 +85,24 @@ if (PICO_SDK_VERSION_STRING VERSION_LESS "1.3.0")
     message(FATAL_ERROR "Raspberry Pi Pico SDK version 1.3.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
 endif()
 
-add_executable(SwiftPico
-    main.c
+add_executable(
+    SwiftPico
+        main.c
 )
 
 add_subdirectory(SwiftLib)
 
-target_link_libraries(SwiftPico
-    $<TARGET_OBJECTS:SwiftLib>
-    pico_stdlib
+target_link_libraries(
+    SwiftPico
+        pico_stdlib
+        # $<TARGET_OBJECTS:> is a generator expression:
+        # <https://cmake.org/cmake/help/v3.28/manual/cmake-generator-expressions.7.html#manual:cmake-generator-expressions(7)>
+        #
+        # Using just "SwiftLib" here results in a linker error I can't explain:
+        # "unknown argument: '--specs=nosys.specs'""
+        # I think this is because CMake tries to use `swiftc` as the linker in
+        # this case. I don’t know why.
+        $<TARGET_OBJECTS:SwiftLib>
 )
 
 # create map/bin/hex file etc.
