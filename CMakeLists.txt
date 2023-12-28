@@ -14,13 +14,30 @@ endif ()
 #    Change this to the current Swift nightly toolchain you installed.
 #    The ID is in /Library/Developer/Toolchains/[TOOLCHAIN].xctoolchain/Info.plist
 #    Alternatively, set the TOOLCHAINS environment variable.
-if (NOT (DEFINED ENV{TOOLCHAINS}))
-    set(Swift_Toolchain "org.swift.59202312071a")
-    message("Swift toolchain: ('${Swift_Toolchain}') (using value from CMakeLists.txt as TOOLCHAINS is not set in environment)")
-else ()
-    set(Swift_Toolchain "$ENV{TOOLCHAINS}")
-    message("Swift toolchain: ('${Swift_Toolchain}') (using TOOLCHAINS value from environment)")
+if (APPLE)
+    if (NOT (DEFINED ENV{TOOLCHAINS}))
+        set(Swift_Toolchain "org.swift.59202312071a")
+        message("Swift toolchain: ('${Swift_Toolchain}') (using value from CMakeLists.txt as TOOLCHAINS is not set in environment)")
+    else ()
+        set(Swift_Toolchain "$ENV{TOOLCHAINS}")
+        message("Swift toolchain: ('${Swift_Toolchain}') (using TOOLCHAINS value from environment)")
+    endif ()
 endif ()
+
+# 3) Target architecture
+#    This should work out of the box, but if it doesn't, set the TARGET environment variable.
+
+if (NOT (DEFINED ENV{TARGET}))
+        if (APPLE)
+            set(Target_Arch "armv6m-none-none-eabi")
+        elseif (LINUX)
+            set(Target_Arch "armv6-none-eabi")
+        endif ()
+        message("Target: ('${Target_Arch}') (using value from CMakeLists.txt as TARGET is not set in environment)")
+    else ()
+        set(Target_Arch "$ENV{TARGET}")
+        message("Target: ('${Target_Arch}') (using TARGET value from environment)")
+    endif ()
 
 # initialize the SDK based on PICO_SDK_PATH
 # note: this must happen before project()
@@ -29,18 +46,25 @@ include(pico_sdk_import.cmake)
 # Configure Swift. This must happen before `project()`. I don't know why.
 # Use nightly Swift compiler, configured for Embedded Swift.
 # Find path to swiftc and store it in swiftc_Path
-execute_process(
-    COMMAND xcrun --toolchain "${Swift_Toolchain}" --find swiftc
-    OUTPUT_VARIABLE swiftc_Path
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-)
+if (APPLE)
+    execute_process(
+        COMMAND xcrun --toolchain "${Swift_Toolchain}" --find swiftc
+        OUTPUT_VARIABLE swiftc_Path
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+elseif (LINUX)
+    # change this to your actual swiftc path
+    set(swiftc_Path "/usr/bin/swiftc")
+endif ()
+
 set(CMAKE_Swift_COMPILER
     "${swiftc_Path}"
 )
+
 set(CMAKE_Swift_FLAGS
     # -wmo: Whole-module optimization is always required for Embedded Swift.
     # -Xfrontend -function-sections: enables dead stripping of unused runtime functions.
-    "-target armv6m-none-none-eabi \
+    "-target ${Target_Arch} \
     -enable-experimental-feature Embedded \
     -wmo \
     -Xfrontend -function-sections"
