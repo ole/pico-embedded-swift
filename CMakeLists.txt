@@ -53,8 +53,11 @@ if (APPLE)
         OUTPUT_STRIP_TRAILING_WHITESPACE
     )
 elseif (LINUX)
-    # change this to your actual swiftc path
-    set(swiftc_Path "/usr/bin/swiftc")
+    execute_process(
+        COMMAND which swiftc
+        OUTPUT_VARIABLE swiftc_Path
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
 endif ()
 
 set(CMAKE_Swift_COMPILER
