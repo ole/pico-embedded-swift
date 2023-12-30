@@ -1,3 +1,7 @@
-add_library(SwiftLib
-    SwiftLib.swift
+add_library(SwiftLib)
+
+target_sources(
+    SwiftLib
+    PRIVATE
+        SwiftLib.swift
 )
