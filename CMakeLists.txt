@@ -9,8 +9,29 @@ cmake_minimum_required(VERSION 3.28)
 #     cmake -DPICO_SDK_PATH="/path/to/pico-sdk"`
 if (NOT (DEFINED ENV{PICO_SDK_PATH}) AND (NOT PICO_SDK_PATH))
     set(PICO_SDK_PATH "${CMAKE_CURRENT_LIST_DIR}/../pico-sdk")
-    message("PICO_SDK_PATH is not set, using value from CMakeLists.txt ('${PICO_SDK_PATH}')")
-endif()
+    message("PICO_SDK_PATH is not set in environment, using value from CMakeLists.txt ('${PICO_SDK_PATH}')")
+endif ()
+
+# 1) Target architecture
+#    This should work out of the box, but if it doesn't, set the TARGET environment variable.
+
+if (NOT (DEFINED ENV{TARGET}))
+        if (APPLE)
+            set(Target_Arch "armv6m-none-none-eabi")
+        elseif (LINUX)
+            set(Target_Arch "armv6-none-eabi")
+        endif ()
+        message("Target: ('${Target_Arch}') (using value from CMakeLists.txt as TARGET is not set in environment)")
+    else ()
+        set(Target_Arch "$ENV{TARGET}")
+        message("Target: ('${Target_Arch}') (using TARGET value from environment)")
+    endif ()
+endif ()
+
+set(CMAKE_Swift_FLAGS
+    # -wmo: Whole-module optimization is always required for Embedded Swift.
+    # -Xfrontend -function-sections: enables dead stripping of unused runtime functions.
+    "-target ${Target_Arch} \
 
 # Initialize the SDK based on PICO_SDK_PATH
 # Note: this must happen before `project()`.
