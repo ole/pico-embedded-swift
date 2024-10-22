@@ -1,3 +1,6 @@
+> [!WARNING]
+> This repository is not being maintained. Please don't send issues or pull requests.
+
 # Embedded Swift on the Raspberry Pi Pico
 
 A proof of concept for executing Embedded Swift code on the [Raspberry Pi Pico](https://www.raspberrypi.com/products/raspberry-pi-pico/). The main program is written in C (built with the official Pico C SDK) and calls into a statically linked Swift library.
